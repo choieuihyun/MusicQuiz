@@ -14,8 +14,11 @@ interface RetrofitInterface {
     @GET("user/")
     fun userName(@Query("id") id: Int, @Query("name") name: String): Call<User>
 
-    // POST는 리턴값 없어서 설정 안했더니 저거 해야된대.
+    // POST는 리턴값 없어서 설정 안했더니 Void 타입으로 리턴 해야된대.
     @POST("user/")
     suspend fun addUser(@Query("id") id: Int?, @Query("name") name: String, @Query("count") count: Int, @Query("team") team: String): Call<Void?>
+
+    @GET("songsChild/")
+    fun getSong(@Query("title") title: String): Call<Songs>
 
 }
