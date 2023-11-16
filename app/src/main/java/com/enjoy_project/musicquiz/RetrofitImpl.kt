@@ -88,6 +88,29 @@ class RetrofitImpl {
 
     }
 
+    fun getSong(title: String, callback: (Songs?) -> Unit) {
+
+        RetrofitClient.userService.getSong(title).enqueue(object : Callback<Songs> {
+
+            override fun onResponse(call: Call<Songs>, response: Response<Songs>) {
+                if (response.isSuccessful.not()) {
+                    return
+                } else {
+                    val songs = response.body()
+                    callback(songs)
+                }
+            }
+
+            override fun onFailure(call: Call<Songs>, t: Throwable) {
+                Log.e("retrofitSongs", t.toString())
+                callback(null)
+            }
+
+
+        })
+
+    }
+
 
 
 }
