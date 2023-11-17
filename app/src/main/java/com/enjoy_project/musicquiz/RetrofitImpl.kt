@@ -88,9 +88,9 @@ class RetrofitImpl {
 
     }
 
-    fun getSong(title: String, callback: (Songs?) -> Unit) {
+    fun getSong(id: Int, callback: (Songs?) -> Unit) {
 
-        RetrofitClient.userService.getSong(title).enqueue(object : Callback<Songs> {
+        RetrofitClient.userService.getSong(id).enqueue(object : Callback<Songs> {
 
             override fun onResponse(call: Call<Songs>, response: Response<Songs>) {
                 if (response.isSuccessful.not()) {
@@ -102,7 +102,6 @@ class RetrofitImpl {
             }
 
             override fun onFailure(call: Call<Songs>, t: Throwable) {
-                Log.e("retrofitSongs", t.toString())
                 callback(null)
             }
 
