@@ -19,6 +19,6 @@ interface RetrofitInterface {
     suspend fun addUser(@Query("id") id: Int?, @Query("name") name: String, @Query("count") count: Int, @Query("team") team: String): Call<Void?>
 
     @GET("songsChild/")
-    fun getSong(@Query("title") title: String): Call<Songs>
+    fun getSong(@Query("id") id: Int): Call<Songs>
 
 }
