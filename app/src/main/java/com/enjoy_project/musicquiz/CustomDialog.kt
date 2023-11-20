@@ -11,7 +11,18 @@ import android.view.WindowManager
 import android.widget.Button
 import android.widget.TextView
 
-class CustomDialog(context: Context): Dialog(context) {
+class CustomDialog(context: Context, private val onDialogComplete: () -> Unit): Dialog(context) {
+
+    private val userColorArray = arrayOf(
+        R.color.red,
+        R.color.blue,
+        R.color.green,
+        R.color.yellow,
+        R.color.purple,
+        R.color.black,
+        R.color.orange,
+        R.color.brown
+    )
 
     private lateinit var itemClickListener: ItemClickListener
 
