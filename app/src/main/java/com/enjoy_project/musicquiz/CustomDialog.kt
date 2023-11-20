@@ -15,6 +15,27 @@ class CustomDialog(context: Context): Dialog(context) {
 
     private lateinit var itemClickListener: ItemClickListener
 
+    private lateinit var question1: RadioButton
+    private lateinit var question2: RadioButton
+    private lateinit var question3: RadioButton
+    private lateinit var question4: RadioButton
+    private lateinit var question5: RadioButton
+
+    private lateinit var btnNext: Button
+    private lateinit var btnCancel: TextView
+    private lateinit var btnComplete: TextView
+
+    private lateinit var userColor: ImageView
+
+    private var question1Text = ""
+    private var question2Text = ""
+    private var question3Text = ""
+    private var question4Text = ""
+    private var question5Text = ""
+
+    private var selectedOption: String? = null
+    private var userCount = 0
+    private var totalUserCount = 8 // 원하는 횟수
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.custom_dialog)
