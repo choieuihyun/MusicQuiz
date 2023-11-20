@@ -51,9 +51,38 @@ class CustomDialog(context: Context, private val onDialogComplete: () -> Unit): 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.custom_dialog)
 
-        val tvCancel = findViewById<TextView>(R.id.tv_cancel)
-        val tvCall = findViewById<TextView>(R.id.tv_call)
+        btnCancel = findViewById<TextView>(R.id.btnCancel)
+        btnComplete = findViewById<TextView>(R.id.btnComplete)
 
+        userColor = findViewById<ImageView>(R.id.userColor)
+
+        btnNext = findViewById<Button>(R.id.btnNext)
+
+        question1 = findViewById<RadioButton>(R.id.radioOption1)
+        question2 = findViewById<RadioButton>(R.id.radioOption2)
+        question3 = findViewById<RadioButton>(R.id.radioOption3)
+        question4 = findViewById<RadioButton>(R.id.radioOption4)
+        question5 = findViewById<RadioButton>(R.id.radioOption5)
+
+        question1.text = question1Text
+        question2.text = question2Text
+        question3.text = question3Text
+        question4.text = question4Text
+        question5.text = question5Text
+
+        setRadioClickListener()
+
+        btnNext.setOnClickListener {
+            handleNextButtonClick()
+        }
+
+        btnComplete.setOnClickListener {
+            handleCompleteButtonClick()
+        }
+
+        btnCancel.setOnClickListener {
+            dismiss()
+        }
 
         // 사이즈를 조절하고 싶을 때 사용 (use it when you want to resize dialog)
         // resize(this, 0.8f, 0.4f)
