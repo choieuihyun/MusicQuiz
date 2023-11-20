@@ -136,4 +136,68 @@ class CustomDialog(context: Context, private val onDialogComplete: () -> Unit): 
     fun setItemClickListener(itemClickListener: ItemClickListener) {
         this.itemClickListener = itemClickListener
     }
+
+    private fun setRadioClickListener() {
+
+        question1.setOnClickListener {
+            selectedOption = question1Text
+        }
+
+        question2.setOnClickListener {
+            selectedOption = question2Text
+        }
+
+        question3.setOnClickListener {
+            selectedOption = question3Text
+        }
+
+        question4.setOnClickListener {
+            selectedOption = question4Text
+        }
+
+        question5.setOnClickListener {
+            selectedOption = question5Text
+        }
+
+    }
+
+    private fun handleNextButtonClick() {
+        if (selectedOption != null) {
+            userCount++
+            if (userCount < totalUserCount) {
+                userColor.setBackgroundResource(userColorArray[userCount])
+                Toast.makeText(context, "Next clicked, Repeat count: $userCount", Toast.LENGTH_SHORT).show()
+            } else {
+                btnNext.isEnabled = false
+                btnComplete.visibility = android.view.View.VISIBLE
+                Toast.makeText(context, "Repeat count reached. Click Complete to finish.", Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            Toast.makeText(context, "Please select an option.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun handleCompleteButtonClick() {
+        if (userCount == totalUserCount) {
+            // 완료 버튼 클릭 시 다이얼로그 종료
+            onDialogComplete.invoke()
+            dismiss()
+        }
+    }
+
+    // 왜 생성자에 안했냐? --> 재생 버튼을 눌러야 데이터를 받아오는데 안눌렀을 때 다이얼로그를 켜버리면 빈 생성자가 되어 데이터가 없잖아.
+    // 아닌데? 별 차이 없겠네, 내가 동작에 따른 데이터를 넣어주는게 아니라 그냥 켰을 때 데이터가 들어가있어야 한다면 생성자에 넣는게 맞겠네.
+    fun setData(question1: String,
+                question2: String,
+                question3: String,
+                question4: String,
+                question5: String) {
+
+        this.question1Text = question1
+        this.question2Text = question2
+        this.question3Text = question3
+        this.question4Text = question4
+        this.question5Text = question5
+
+    }
 }
