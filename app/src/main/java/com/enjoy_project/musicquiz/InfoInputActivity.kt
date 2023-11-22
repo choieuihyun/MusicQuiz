@@ -8,6 +8,7 @@ import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 class InfoInputActivity : AppCompatActivity() {
@@ -19,6 +20,7 @@ class InfoInputActivity : AppCompatActivity() {
 
         val name = findViewById<EditText>(R.id.name)
         val team = findViewById<EditText>(R.id.team)
+        val teamNumber = findViewById<EditText>(R.id.teamNumber)
         val inputButton = findViewById<Button>(R.id.inputButton)
         val nextButton = findViewById<Button>(R.id.nextButton)
 
@@ -26,6 +28,7 @@ class InfoInputActivity : AppCompatActivity() {
 
             val userName = name.text.toString()
             val userTeam = team.text.toString()
+            val userTeamNumber = teamNumber.text.toString().toInt()
             val userCount = 0
 
             CoroutineScope(Dispatchers.IO).launch {
@@ -33,13 +36,17 @@ class InfoInputActivity : AppCompatActivity() {
                 val retrofit = RetrofitImpl()
 
                 try {
-                    retrofit.addUser(null, userName, userCount, userTeam)
+                    if (team.text.isNotBlank()) {
+                        retrofit.addUserTeam(null, userTeam, userTeamNumber)
+                        retrofit.addUser(null, userName, userCount, userTeam)
+                    }
                     Log.d("InfoInput", "success")
-                } catch (e: ArithmeticException) {
-                    Log.d("PostError", e.message.toString())
+                } catch (e: Exception) {
+                    Log.e("PostError", "User addition failed: ${e.message}", e)
                 }
 
             }
+
 
         }
 
@@ -49,7 +56,7 @@ class InfoInputActivity : AppCompatActivity() {
             startActivity(intent)
 
         }
-        
+
 
     }
 

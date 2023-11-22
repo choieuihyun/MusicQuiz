@@ -15,7 +15,9 @@ import kotlin.math.log
 object RetrofitClient {
 
     private const val BASE_URL = "http://192.168.45.98:8080/" // 이게 localhost로 하면 안되고 자기 ip로 해야하네
-    private val loggingInterceptor = HttpLoggingInterceptor()
+    private val loggingInterceptor = HttpLoggingInterceptor().apply {
+        level = HttpLoggingInterceptor.Level.BODY
+    }
 
     private val nullOnEmptyConverterFactory = object : Converter.Factory() {
         fun converterFactory() = this

@@ -18,7 +18,10 @@ interface RetrofitInterface {
     @POST("user/")
     suspend fun addUser(@Query("id") id: Int?, @Query("name") name: String, @Query("count") count: Int, @Query("team") team: String): Call<Void?>
 
+    @POST("userTeam/")
+    suspend fun addUserTeam(@Query("id") id: Int?, @Query("team_name") teamName: String, @Query("teamNumber") teamNumber: Int?): Call<Void?>
+
     @GET("songsChild/")
-    fun getSong(@Query("title") title: String): Call<Songs>
+    fun getSong(@Query("id") id: Int): Call<Songs>
 
 }

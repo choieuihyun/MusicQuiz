@@ -88,9 +88,34 @@ class RetrofitImpl {
 
     }
 
-    fun getSong(title: String, callback: (Songs?) -> Unit) {
+    suspend fun addUserTeam(id: Int?, teamName: String, teamNumber: Int?) {
 
-        RetrofitClient.userService.getSong(title).enqueue(object : Callback<Songs> {
+        try {
+
+            RetrofitClient.userService.addUserTeam(id, teamName, teamNumber)
+                .enqueue(object : Callback<Void?> {
+                    override fun onResponse(call: Call<Void?>, response: Response<Void?>) {
+                        if (response.isSuccessful) {
+                            Log.d("retrofitImplPost", "success")
+                        } else
+                            Log.d("retrofitImplPost", response.message())
+                    }
+
+                    override fun onFailure(call: Call<Void?>, t: Throwable) {
+                        Log.e("retrofitImplPost", "연결 실패")
+                    }
+
+                })
+
+        }catch (e: NullPointerException) {
+            Log.d("NPE", e.message!!)
+        }
+    }
+
+
+    fun getSong(id: Int, callback: (Songs?) -> Unit) {
+
+        RetrofitClient.userService.getSong(id).enqueue(object : Callback<Songs> {
 
             override fun onResponse(call: Call<Songs>, response: Response<Songs>) {
                 if (response.isSuccessful.not()) {
@@ -102,7 +127,6 @@ class RetrofitImpl {
             }
 
             override fun onFailure(call: Call<Songs>, t: Throwable) {
-                Log.e("retrofitSongs", t.toString())
                 callback(null)
             }
 
