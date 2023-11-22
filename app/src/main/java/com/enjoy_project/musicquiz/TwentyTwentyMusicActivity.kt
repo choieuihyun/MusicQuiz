@@ -67,6 +67,17 @@ class TwentyTwentyMusicActivity : AppCompatActivity() {
 
         }
 
+        dialogButton.setOnClickListener {
+
+            customDialog(
+                firstExample.text.toString(),
+                secondExample.text.toString(),
+                thirdExample.text.toString(),
+                fourthExample.text.toString(),
+                fifthExample.text.toString()
+            )
+
+        }
 
     }
 
