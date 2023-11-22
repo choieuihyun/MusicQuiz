@@ -188,4 +188,28 @@ class TwentyTwentyMusicActivity : AppCompatActivity() {
         }
 
     }
+
+    private fun customDialog(question1: String,
+                             question2: String,
+                             question3: String,
+                             question4: String,
+                             question5: String) {
+
+        val dialog = CustomDialog(this) {
+            Log.d("sdfsdf","sdfsdf")
+        }
+
+        try {
+
+            dialog.setData(question1, question2, question3, question4, question5)
+
+        } catch (e: NullPointerException) {
+
+            Toast.makeText(this,"노래를 재생시키고 켜주세요", Toast.LENGTH_LONG).show()
+
+        }
+
+        dialog.show()
+
+    }
 }
