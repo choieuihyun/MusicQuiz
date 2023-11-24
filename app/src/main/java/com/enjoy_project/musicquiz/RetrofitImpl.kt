@@ -8,7 +8,7 @@ import retrofit2.Response
 
 class RetrofitImpl {
 
-    fun getList() {
+    fun getList(callback: (List<User>?) -> Unit) {
 
         RetrofitClient.userService.userList()
             .enqueue(object : Callback<List<User>> {
@@ -19,17 +19,44 @@ class RetrofitImpl {
                 ) {
                     if (response.isSuccessful.not()) {
                         Log.e("retrofitImpl", response.toString())
-                        return
+                        callback(null)
                     } else {
                         val user = response.body()
+                        callback(user)
                         Log.d("retrofitImplSuccess", user.toString())
-                        response.body()
                     }
                 }
 
                 override fun onFailure(call: Call<List<User>>, t: Throwable) {
                     Log.e("retrofitImpl", "연결 실패")
                     Log.e("retrofitImpl", t.toString())
+                }
+
+            })
+    }
+
+    fun getUserListByTeam(team: String, callback: (List<String>?) -> Unit) {
+
+        RetrofitClient.userService.userListByTeam(team)
+            .enqueue(object : Callback<List<String>> {
+
+                override fun onResponse(
+                    call: Call<List<String>>,
+                    response: Response<List<String>>
+                ) {
+                    if (response.isSuccessful.not()) {
+                        Log.e("retrofitImplByTeam", response.toString())
+                        callback(null)
+                    } else {
+                        val user = response.body()
+                        callback(user)
+                        Log.d("retrofitImplSuccess", user.toString())
+                    }
+                }
+
+                override fun onFailure(call: Call<List<String>>, t: Throwable) {
+                    Log.e("retrofitImplByTeam", "연결 실패")
+                    Log.e("retrofitImplByTeam", t.toString())
                 }
 
             })
@@ -84,8 +111,6 @@ class RetrofitImpl {
         }catch (e: NullPointerException) {
             Log.d("NPE", e.message!!)
         }
-
-
     }
 
     suspend fun addUserTeam(id: Int?, teamName: String, teamNumber: Int?) {
