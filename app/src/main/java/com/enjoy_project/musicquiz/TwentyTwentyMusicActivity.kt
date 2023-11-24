@@ -1,11 +1,13 @@
 package com.enjoy_project.musicquiz
 
+import android.content.Intent
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
@@ -14,6 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.IOException
+import java.lang.Exception
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
@@ -39,6 +42,7 @@ class TwentyTwentyMusicActivity : AppCompatActivity() {
     private lateinit var thirdExample: TextView
     private lateinit var fourthExample: TextView
     private lateinit var fifthExample: TextView
+    private lateinit var exampleAnswer: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,12 +51,16 @@ class TwentyTwentyMusicActivity : AppCompatActivity() {
 
         val playButton = findViewById<Button>(R.id.playButton)
         val nextButton = findViewById<Button>(R.id.nextMusicButton)
+        val dialogButton = findViewById<Button>(R.id.dialogButton)
 
         firstExample = findViewById<TextView>(R.id.firstExample)
         secondExample = findViewById<TextView>(R.id.secondExample)
         thirdExample = findViewById<TextView>(R.id.thirdExample)
         fourthExample = findViewById<TextView>(R.id.fourthExample)
         fifthExample = findViewById<TextView>(R.id.fifthExample)
+
+        val userCount = intent.getIntExtra("teamNumber", 0) // 총 유저 수
+        val userTeamName = intent.getStringExtra("teamName")
 
         playButton.setOnClickListener {
 
@@ -62,20 +70,28 @@ class TwentyTwentyMusicActivity : AppCompatActivity() {
 
         nextButton.setOnClickListener {
 
-            if(!isPlaying)
+            if (!isPlaying)
                 playingMusicId++
 
         }
 
         dialogButton.setOnClickListener {
 
-            customDialog(
-                firstExample.text.toString(),
-                secondExample.text.toString(),
-                thirdExample.text.toString(),
-                fourthExample.text.toString(),
-                fifthExample.text.toString()
-            )
+            try {
+
+                customDialog(
+                    userCount,
+                    userTeamName.toString(),
+                    firstExample.text.toString(),
+                    secondExample.text.toString(),
+                    thirdExample.text.toString(),
+                    fourthExample.text.toString(),
+                    fifthExample.text.toString(),
+                    exampleAnswer
+                )
+            } catch (e : Exception) {
+                Toast.makeText(this,"재생 버튼을 누르고 켜주세요", Toast.LENGTH_LONG).show()
+            }
 
         }
 
@@ -101,10 +117,12 @@ class TwentyTwentyMusicActivity : AppCompatActivity() {
 
                 retrofit.getSong(playingMusicId) {
 
-                    // 한글 파일을 못불러와서 해봤는데 쩝..
+                    // 한글 파일을 못불러와서 해봤는데 쩝.. 그냥 노래 파일 이름을 영어로 바꿔버림.
                     val encodedTitle = URLEncoder.encode(it?.title + ".mp3", "UTF-8")
 
                     playSong(button, getSongRef(it?.title ?: "null"))
+                    exampleAnswer = it?.answer ?: "null"
+                    Log.d("answer", it?.answer.toString())
 
                     // 이렇게 하면 안되고 String.xml에 저장해놓고 해야함.
                     // 이것도 백그라운드 스레드에서 할게 아님.
@@ -171,7 +189,7 @@ class TwentyTwentyMusicActivity : AppCompatActivity() {
 
     private fun getSongRef(root: String): StorageReference {
         songRef = storageRef.child("$secondQuizRoot/$root.mp3")
-        Log.d("sibal", "$secondQuizRoot/$root.mp3")
+
         return songRef
     }
 
@@ -189,23 +207,26 @@ class TwentyTwentyMusicActivity : AppCompatActivity() {
 
     }
 
-    private fun customDialog(question1: String,
-                             question2: String,
-                             question3: String,
-                             question4: String,
-                             question5: String) {
+    private fun customDialog(
+        userCount: Int,
+        userTeamName: String,
+        question1: String,
+        question2: String,
+        question3: String,
+        question4: String,
+        question5: String,
+        answer: String
+    ) {
 
-        val dialog = CustomDialog(this) {
-            Log.d("sdfsdf","sdfsdf")
-        }
+        val dialog = CustomDialog(this, userCount, userTeamName)
 
         try {
 
-            dialog.setData(question1, question2, question3, question4, question5)
+            dialog.setData(question1, question2, question3, question4, question5, answer)
 
         } catch (e: NullPointerException) {
 
-            Toast.makeText(this,"노래를 재생시키고 켜주세요", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "노래를 재생시키고 켜주세요", Toast.LENGTH_LONG).show()
 
         }
 
