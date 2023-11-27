@@ -52,6 +52,7 @@ class TwentyTwentyMusicActivity : AppCompatActivity() {
         val playButton = findViewById<Button>(R.id.playButton)
         val nextButton = findViewById<Button>(R.id.nextMusicButton)
         val dialogButton = findViewById<Button>(R.id.dialogButton)
+        val answerButton = findViewById<Button>(R.id.answerButton)
 
         firstExample = findViewById<TextView>(R.id.firstExample)
         secondExample = findViewById<TextView>(R.id.secondExample)
@@ -60,7 +61,15 @@ class TwentyTwentyMusicActivity : AppCompatActivity() {
         fifthExample = findViewById<TextView>(R.id.fifthExample)
 
         val userCount = intent.getIntExtra("teamNumber", 0) // 총 유저 수
-        val userTeamName = intent.getStringExtra("teamName")
+        val userTeamName = intent.getStringExtra("teamName") // 입력 받은 팀명
+
+        if (userTeamName != null) {
+
+            getUserList(userTeamName)
+
+
+
+        }
 
         playButton.setOnClickListener {
 
@@ -72,6 +81,8 @@ class TwentyTwentyMusicActivity : AppCompatActivity() {
 
             if (!isPlaying)
                 playingMusicId++
+
+            initializeExampleColor()
 
         }
 
@@ -94,6 +105,29 @@ class TwentyTwentyMusicActivity : AppCompatActivity() {
             }
 
         }
+
+        answerButton.setOnClickListener {
+
+            try {
+                val exampleArray = arrayListOf<TextView>()
+                exampleArray.add(firstExample)
+                exampleArray.add(secondExample)
+                exampleArray.add(thirdExample)
+                exampleArray.add(fourthExample)
+                exampleArray.add(fifthExample)
+
+                for (example in exampleArray) {
+
+                    if (example.text.substring(3) == exampleAnswer)
+                        example.setTextColor(getColor(R.color.red))
+
+                }
+            } catch (e: Exception) {
+                Toast.makeText(this, "노래를 재생시키고 눌러주세요", Toast.LENGTH_LONG).show()
+            }
+
+        }
+
 
     }
 
@@ -203,6 +237,37 @@ class TwentyTwentyMusicActivity : AppCompatActivity() {
             mediaPlayer?.start()
             button.setBackgroundResource(R.drawable.music_pause) // 재생 중일 때 클릭
             true
+        }
+
+    }
+
+    private fun initializeExampleColor() {
+
+        firstExample.setTextColor(getColor(R.color.black))
+        secondExample.setTextColor(getColor(R.color.black))
+        thirdExample.setTextColor(getColor(R.color.black))
+        fourthExample.setTextColor(getColor(R.color.black))
+        fifthExample.setTextColor(getColor(R.color.black))
+
+    }
+
+    private fun getUserList(userTeamName: String) {
+
+        CoroutineScope(Dispatchers.IO).launch {
+
+            retrofit.getUserListByTeam(userTeamName) {
+
+                userList = it as ArrayList<String>
+
+            }
+        }
+    }
+
+    private fun getUserCount() {
+
+        CoroutineScope(Dispatchers.IO).launch {
+
+
         }
 
     }
