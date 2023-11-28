@@ -11,8 +11,14 @@ interface RetrofitInterface {
     @GET("user/all")
     fun userList(): Call<List<User>>
 
+    @GET("user")
+    fun getUserByName(@Query("name") name: String): Call<User>
+
+    @GET("user/team")
+    fun getUserListByTeam(@Query("team") team: String): Call<List<String>>
+
     @GET("user/")
-    fun userName(@Query("id") id: Int, @Query("name") name: String): Call<User>
+    fun getUserTeam(@Query("teamName") teamName: String, @Query("teamNumber") teamNumber: Int): Call<UserTeam>
 
     // POST는 리턴값 없어서 설정 안했더니 Void 타입으로 리턴 해야된대.
     @POST("user/")
@@ -20,6 +26,9 @@ interface RetrofitInterface {
 
     @POST("userTeam/")
     suspend fun addUserTeam(@Query("id") id: Int?, @Query("team_name") teamName: String, @Query("teamNumber") teamNumber: Int?): Call<Void?>
+
+    @POST("userCount/")
+    suspend fun addUserCount(@Query("name") name: String, @Query("team") team: String): Call<Void?>
 
     @GET("songsChild/")
     fun getSong(@Query("id") id: Int): Call<Songs>
