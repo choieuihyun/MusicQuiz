@@ -4,6 +4,7 @@ import android.util.Log
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.SortedMap
 
 
 class RetrofitImpl {
@@ -86,6 +87,64 @@ class RetrofitImpl {
                 }
 
             })
+
+    }
+
+    fun getUserTeam(teamName: String, teamNumber: Int) {
+
+        try {
+
+            RetrofitClient.userService.getUserTeam(teamName, teamNumber)
+                .enqueue(object : Callback<UserTeam> {
+                    override fun onResponse(call: Call<UserTeam>, response: Response<UserTeam>) {
+                        if (response.isSuccessful) {
+                            Log.d("retrofitImplPost", "success")
+                        } else
+                            Log.d("retrofitImplPost", response.message())
+                    }
+
+                    override fun onFailure(call: Call<UserTeam?>, t: Throwable) {
+                        Log.e("retrofitImplPost", "연결 실패")
+                    }
+
+                })
+
+        } catch (e: NullPointerException) {
+            Log.d("NPE", e.message!!)
+        }
+
+    }
+
+    fun getUserCount(userList: ArrayList<String>, callback: (SortedMap<Int?,Int?>) -> Unit) {
+
+        val countHashMap = LinkedHashMap<Int?, Int?>().toSortedMap(compareBy { it })
+
+        userList.forEach { name ->
+
+            RetrofitClient.userService.getUserByName(name).enqueue(object : Callback<User> {
+
+                override fun onResponse(call: Call<User>, response: Response<User>) {
+
+                    val user = response.body()
+                    Log.d("retrofitImplCount", "success")
+                    Log.d("retrofitImplUser", user.toString())
+                    countHashMap[user!!.id] = user.count
+                    // 요청 완료 후 콜백 반환
+                    if (countHashMap.size == userList.size) {
+                        callback(countHashMap)
+                        Log.d("countList", countHashMap.toString())
+                    }
+
+                }
+
+                override fun onFailure(call: Call<User>, t: Throwable) {
+                    Log.d("retrofitImplCount", "failed: ${t.message}")
+                    callback(LinkedHashMap<Int?, Int?>().toSortedMap(compareBy { it }))
+                }
+
+            })
+
+        }
 
     }
 
