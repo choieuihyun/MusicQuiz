@@ -251,24 +251,52 @@ class TwentyTwentyMusicActivity : AppCompatActivity() {
 
     }
 
-    private fun getUserList(userTeamName: String) {
+    // 호출해보면 count와 유저의 순서가 안맞아. 아마 id를 같이 불러와서 순서대로 저장해야하나?
+    private fun fetchDataAndProcess(teamName: String) {
 
         CoroutineScope(Dispatchers.IO).launch {
 
-            retrofit.getUserListByTeam(userTeamName) {
+            retrofit.getUserListByTeam(teamName) { userList ->
 
-                userList = it as ArrayList<String>
+                Log.d("getUserList", userList.toString())
+
+                this@TwentyTwentyMusicActivity.userList = userList as ArrayList<String>
+
+                retrofit.getUserCount(userList) {
+
+                    handleResult(it)
+                    Log.d("getUserCountList", it.toString())
+
+                }
 
             }
+
         }
+
     }
 
-    private fun getUserCount() {
+    private fun handleResult(countHashMap: SortedMap<Int?, Int?>) {
 
-        CoroutineScope(Dispatchers.IO).launch {
+        Log.d("BroadHandleResult", "handleResult")
 
+        val redPointValue = countHashMap.entries.firstOrNull()
+        val bluePointValue = countHashMap.entries.elementAtOrNull(1)
+        val greenPointValue = countHashMap.entries.elementAtOrNull(2)
+        val yellowPointValue = countHashMap.entries.elementAtOrNull(3)
+        val purplePointValue = countHashMap.entries.elementAtOrNull(4)
+        val blackPointValue = countHashMap.entries.elementAtOrNull(5)
+        val orangePointValue = countHashMap.entries.elementAtOrNull(6)
+        val brownPointValue = countHashMap.entries.elementAtOrNull(7)
 
-        }
+        redPoint.text = redPointValue?.value.toString()
+        bluePoint.text = bluePointValue?.value.toString()
+        greenPoint.text = greenPointValue?.value.toString()
+        yellowPoint.text = yellowPointValue?.value.toString()
+        purplePoint.text = purplePointValue?.value.toString()
+        blackPoint.text = blackPointValue?.value.toString()
+        orangePoint.text = orangePointValue?.value.toString()
+        brownPoint.text = brownPointValue?.value.toString()
+
 
     }
 
