@@ -44,6 +44,30 @@ class TwentyTwentyMusicActivity : AppCompatActivity() {
     private lateinit var fifthExample: TextView
     private lateinit var exampleAnswer: String
 
+    private lateinit var redPoint: TextView
+    private lateinit var bluePoint: TextView
+    private lateinit var greenPoint: TextView
+    private lateinit var yellowPoint: TextView
+    private lateinit var purplePoint: TextView
+    private lateinit var blackPoint: TextView
+    private lateinit var orangePoint: TextView
+    private lateinit var brownPoint: TextView
+
+/*    private val receiver = object : BroadcastReceiver() {
+        // broadCastReceiver로 실시간 Point 데이터 갱신해보려다가 실패함.
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent?.action == "point-updated") {
+                Log.d("BroadcastReceiver", "onReceive: Received broadcast")
+                val countHashMap = intent.getSerializableExtra("countHashMap") as? SortedMap<Int?, Int?>
+                if (countHashMap != null) {
+                    handleResult(countHashMap)
+                }
+            }
+        }
+    }*/
+
+    private var userList = arrayListOf<String>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -60,14 +84,21 @@ class TwentyTwentyMusicActivity : AppCompatActivity() {
         fourthExample = findViewById<TextView>(R.id.fourthExample)
         fifthExample = findViewById<TextView>(R.id.fifthExample)
 
+        redPoint = findViewById(R.id.red)
+        bluePoint = findViewById(R.id.blue)
+        greenPoint = findViewById(R.id.green)
+        yellowPoint = findViewById(R.id.yellow)
+        purplePoint = findViewById(R.id.purple)
+        blackPoint = findViewById(R.id.black)
+        orangePoint = findViewById(R.id.orange)
+        brownPoint = findViewById(R.id.brown)
+
         val userCount = intent.getIntExtra("teamNumber", 0) // 총 유저 수
         val userTeamName = intent.getStringExtra("teamName") // 입력 받은 팀명
 
         if (userTeamName != null) {
 
-            getUserList(userTeamName)
-
-
+            fetchDataAndProcess(userTeamName)
 
         }
 
