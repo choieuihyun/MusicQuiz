@@ -187,14 +187,35 @@ class CustomDialog(
     private fun handleNextButtonClick() {
 
         if (selectedOption != null) {
-            userCount++
+            val currentUserCount = userCount++
+
+            Log.d("sdfsdfop", selectedOption!!.substring(3))
+            Log.d("sdfsdfans", answer.toString())
+
             if (userCount < totalUserCount) {
+
                 userColor.setBackgroundResource(userColorArray[userCount])
-                Toast.makeText(
-                    context,
-                    "Next clicked, Repeat count: $userCount",
-                    Toast.LENGTH_SHORT
-                ).show()
+
+                    // 문자열 자른이유는 1.이 번호랑 공백 지우기 위함.
+                    if (selectedOption!!.substring(3) == answer) {
+
+                        CoroutineScope(Dispatchers.IO).launch {
+
+                            // userCount++가 먼저 실행되어서 0번째 인덱스에 추가하려는데 1번째 인덱스에 추가되어서 이렇게 해봤음
+                            // 근데 순서를 제어하는게 아니라 이렇게 코드 단에서 인덱스로 제어하는게 올바른 구조인가. 이것이 문제로다.
+                            retrofit.addUserCount(userList[currentUserCount], userTeamName)
+                            Log.d("userListCount", userList[currentUserCount].toString())
+
+                        }
+
+                    }
+
+                    Toast.makeText(
+                        context,
+                        "Next clicked, Repeat count: $currentUserCount",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
             } else {
                 btnNext.isEnabled = false
                 btnComplete.visibility = android.view.View.VISIBLE
