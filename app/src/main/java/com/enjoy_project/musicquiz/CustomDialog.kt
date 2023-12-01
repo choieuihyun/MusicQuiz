@@ -232,7 +232,18 @@ class CustomDialog(
 
     private fun handleCompleteButtonClick() {
         if (userCount == totalUserCount) {
-            // 완료 버튼 클릭 시 다이얼로그 종료
+            // 완료 버튼 클릭 시 다이얼로그 종료, 마지막 인덱스 인원 count 추가
+            if (selectedOption!!.substring(3) == answer) {
+
+                CoroutineScope(Dispatchers.IO).launch {
+
+                    // userCount++가 먼저 실행되어서 0번째 인덱스에 추가하려는데 1번째 인덱스에 추가되어서 이렇게 해봤음
+                    // 근데 순서를 제어하는게 아니라 이렇게 코드 단에서 인덱스로 제어하는게 올바른 구조인가. 이것이 문제로다.
+                    retrofit.addUserCount(userList[userCount-1], userTeamName)
+                    Log.d("userListCount", userList[userCount-1])
+
+                }
+            }
             //onDialogComplete.invoke()
             dismiss()
         }
