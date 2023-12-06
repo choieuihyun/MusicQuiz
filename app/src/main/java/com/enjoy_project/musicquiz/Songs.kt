@@ -28,4 +28,7 @@ data class Songs (
     @SerializedName("answer")
     val answer: String,
 
+    @SerializedName("lyrics")
+    val lyrics: String
+
     )
