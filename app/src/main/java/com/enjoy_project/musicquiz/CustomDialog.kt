@@ -59,6 +59,7 @@ class CustomDialog(
     private lateinit var userColor: ImageView
 
     private var userList: List<String> = arrayListOf()
+    private var answerUserList: ArrayList<String> = arrayListOf()
 
     private var question1Text = ""
     private var question2Text = ""
