@@ -243,6 +243,16 @@ class CustomDialog(
                     Log.d("userListCount", userList[userCount-1])
 
                 }
+
+            } else {
+
+                CoroutineScope(Dispatchers.IO).launch {
+
+                    // if문을 잘 봤으면 이걸로 고생 안했다..
+                    onDataPassListener.onDataPass(answerUserList)
+
+                }
+
             }
             //onDialogComplete.invoke()
             dismiss()
