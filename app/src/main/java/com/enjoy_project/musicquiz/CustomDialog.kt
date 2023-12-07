@@ -216,7 +216,8 @@ class CustomDialog(
                             // userCount++가 먼저 실행되어서 0번째 인덱스에 추가하려는데 1번째 인덱스에 추가되어서 이렇게 해봤음
                             // 근데 순서를 제어하는게 아니라 이렇게 코드 단에서 인덱스로 제어하는게 올바른 구조인가. 이것이 문제로다.
                             retrofit.addUserCount(userList[currentUserCount], userTeamName)
-                            Log.d("userListCount", userList[currentUserCount].toString())
+                            answerUserList.add(userList[currentUserCount])
+                            Log.d("dialogAnswerUserList", answerUserList.toString())
 
                         }
 
