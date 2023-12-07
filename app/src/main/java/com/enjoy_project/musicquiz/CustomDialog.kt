@@ -105,6 +105,14 @@ class CustomDialog(
         setRadioClickListener()
 
         btnNext.setOnClickListener {
+
+            val selectedRadioButtonId = radioGroup.checkedRadioButtonId
+
+            if (selectedRadioButtonId == -1) {
+                Toast.makeText(context, "정답을 선택해주세요.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener  // 아무 작업도 수행하지 않고 함수 종료
+            }
+
             handleNextButtonClick()
             radioGroup.clearCheck()
         }
