@@ -26,6 +26,10 @@ class CustomDialog(
     private val userTeamName: String
 ) : Dialog(context) {
 
+    interface OnDataPassDialogToActivityListener {
+        fun onDataPass(answerUserList: ArrayList<String>)
+    }
+
     private val userColorArray = arrayOf(
         R.color.red,
         R.color.blue,
