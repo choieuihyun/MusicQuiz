@@ -13,6 +13,8 @@ import kotlinx.coroutines.launch
 
 class InfoInputActivity : AppCompatActivity() {
 
+    private val retrofit = RetrofitImpl()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -33,8 +35,6 @@ class InfoInputActivity : AppCompatActivity() {
 
             CoroutineScope(Dispatchers.IO).launch {
 
-                val retrofit = RetrofitImpl()
-
                 try {
                     if (team.text.isNotBlank()) {
                         retrofit.addUserTeam(null, userTeam, userTeamNumber)
@@ -52,8 +52,21 @@ class InfoInputActivity : AppCompatActivity() {
 
         nextButton.setOnClickListener {
 
-            val intent = Intent(this, TwentyTwentyMusicActivity::class.java)
-            startActivity(intent)
+            try {
+
+                val userTeam = team.text.toString()
+                val userTeamNumber = teamNumber.text.toString().toInt()
+
+                val intent = Intent(this, TwentyTwentyMusicActivity::class.java)
+
+                intent.putExtra("teamName", userTeam)
+                intent.putExtra("teamNumber", userTeamNumber) // 여기서 입력한 팀명을 넘기고
+
+                startActivity(intent)
+
+            } catch (e: Exception) {
+
+            }
 
         }
 

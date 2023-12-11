@@ -1,21 +1,23 @@
 package com.enjoy_project.musicquiz
 
+import android.content.Intent
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.io.IOException
+import java.lang.Exception
 import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
+import java.util.SortedMap
 
 class TwentyTwentyMusicActivity : AppCompatActivity() {
 
@@ -39,6 +41,31 @@ class TwentyTwentyMusicActivity : AppCompatActivity() {
     private lateinit var thirdExample: TextView
     private lateinit var fourthExample: TextView
     private lateinit var fifthExample: TextView
+    private lateinit var exampleAnswer: String
+
+    private lateinit var redPoint: TextView
+    private lateinit var bluePoint: TextView
+    private lateinit var greenPoint: TextView
+    private lateinit var yellowPoint: TextView
+    private lateinit var purplePoint: TextView
+    private lateinit var blackPoint: TextView
+    private lateinit var orangePoint: TextView
+    private lateinit var brownPoint: TextView
+
+/*    private val receiver = object : BroadcastReceiver() {
+        // broadCastReceiver로 실시간 Point 데이터 갱신해보려다가 실패함.
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent?.action == "point-updated") {
+                Log.d("BroadcastReceiver", "onReceive: Received broadcast")
+                val countHashMap = intent.getSerializableExtra("countHashMap") as? SortedMap<Int?, Int?>
+                if (countHashMap != null) {
+                    handleResult(countHashMap)
+                }
+            }
+        }
+    }*/
+
+    private var userList = arrayListOf<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,12 +74,32 @@ class TwentyTwentyMusicActivity : AppCompatActivity() {
 
         val playButton = findViewById<Button>(R.id.playButton)
         val nextButton = findViewById<Button>(R.id.nextMusicButton)
+        val dialogButton = findViewById<Button>(R.id.dialogButton)
+        val answerButton = findViewById<Button>(R.id.answerButton)
 
         firstExample = findViewById<TextView>(R.id.firstExample)
         secondExample = findViewById<TextView>(R.id.secondExample)
         thirdExample = findViewById<TextView>(R.id.thirdExample)
         fourthExample = findViewById<TextView>(R.id.fourthExample)
         fifthExample = findViewById<TextView>(R.id.fifthExample)
+
+        redPoint = findViewById(R.id.red)
+        bluePoint = findViewById(R.id.blue)
+        greenPoint = findViewById(R.id.green)
+        yellowPoint = findViewById(R.id.yellow)
+        purplePoint = findViewById(R.id.purple)
+        blackPoint = findViewById(R.id.black)
+        orangePoint = findViewById(R.id.orange)
+        brownPoint = findViewById(R.id.brown)
+
+        val userCount = intent.getIntExtra("teamNumber", 0) // 총 유저 수
+        val userTeamName = intent.getStringExtra("teamName") // 입력 받은 팀명
+
+        if (userTeamName != null) {
+
+            fetchDataAndProcess(userTeamName)
+
+        }
 
         playButton.setOnClickListener {
 
@@ -62,22 +109,55 @@ class TwentyTwentyMusicActivity : AppCompatActivity() {
 
         nextButton.setOnClickListener {
 
-            if(!isPlaying)
+            if (!isPlaying)
                 playingMusicId++
+
+            initializeExampleColor()
 
         }
 
         dialogButton.setOnClickListener {
 
-            customDialog(
-                firstExample.text.toString(),
-                secondExample.text.toString(),
-                thirdExample.text.toString(),
-                fourthExample.text.toString(),
-                fifthExample.text.toString()
-            )
+            try {
+
+                customDialog(
+                    userCount,
+                    userTeamName.toString(),
+                    firstExample.text.toString(),
+                    secondExample.text.toString(),
+                    thirdExample.text.toString(),
+                    fourthExample.text.toString(),
+                    fifthExample.text.toString(),
+                    exampleAnswer
+                )
+            } catch (e : Exception) {
+                Toast.makeText(this,"재생 버튼을 누르고 켜주세요", Toast.LENGTH_LONG).show()
+            }
 
         }
+
+        answerButton.setOnClickListener {
+
+            try {
+                val exampleArray = arrayListOf<TextView>()
+                exampleArray.add(firstExample)
+                exampleArray.add(secondExample)
+                exampleArray.add(thirdExample)
+                exampleArray.add(fourthExample)
+                exampleArray.add(fifthExample)
+
+                for (example in exampleArray) {
+
+                    if (example.text.substring(3) == exampleAnswer)
+                        example.setTextColor(getColor(R.color.red))
+
+                }
+            } catch (e: Exception) {
+                Toast.makeText(this, "노래를 재생시키고 눌러주세요", Toast.LENGTH_LONG).show()
+            }
+
+        }
+
 
     }
 
@@ -101,10 +181,12 @@ class TwentyTwentyMusicActivity : AppCompatActivity() {
 
                 retrofit.getSong(playingMusicId) {
 
-                    // 한글 파일을 못불러와서 해봤는데 쩝..
+                    // 한글 파일을 못불러와서 해봤는데 쩝.. 그냥 노래 파일 이름을 영어로 바꿔버림.
                     val encodedTitle = URLEncoder.encode(it?.title + ".mp3", "UTF-8")
 
                     playSong(button, getSongRef(it?.title ?: "null"))
+                    exampleAnswer = it?.answer ?: "null"
+                    Log.d("answer", it?.answer.toString())
 
                     // 이렇게 하면 안되고 String.xml에 저장해놓고 해야함.
                     // 이것도 백그라운드 스레드에서 할게 아님.
@@ -171,7 +253,7 @@ class TwentyTwentyMusicActivity : AppCompatActivity() {
 
     private fun getSongRef(root: String): StorageReference {
         songRef = storageRef.child("$secondQuizRoot/$root.mp3")
-        Log.d("sibal", "$secondQuizRoot/$root.mp3")
+
         return songRef
     }
 
@@ -189,23 +271,85 @@ class TwentyTwentyMusicActivity : AppCompatActivity() {
 
     }
 
-    private fun customDialog(question1: String,
-                             question2: String,
-                             question3: String,
-                             question4: String,
-                             question5: String) {
+    private fun initializeExampleColor() {
 
-        val dialog = CustomDialog(this) {
-            Log.d("sdfsdf","sdfsdf")
+        firstExample.setTextColor(getColor(R.color.black))
+        secondExample.setTextColor(getColor(R.color.black))
+        thirdExample.setTextColor(getColor(R.color.black))
+        fourthExample.setTextColor(getColor(R.color.black))
+        fifthExample.setTextColor(getColor(R.color.black))
+
+    }
+
+    // 호출해보면 count와 유저의 순서가 안맞아. 아마 id를 같이 불러와서 순서대로 저장해야하나?
+    private fun fetchDataAndProcess(teamName: String) {
+
+        CoroutineScope(Dispatchers.IO).launch {
+
+            retrofit.getUserListByTeam(teamName) { userList ->
+
+                Log.d("getUserList", userList.toString())
+
+                this@TwentyTwentyMusicActivity.userList = userList as ArrayList<String>
+
+                retrofit.getUserCount(userList) {
+
+                    handleResult(it)
+                    Log.d("getUserCountList", it.toString())
+
+                }
+
+            }
+
         }
+
+    }
+
+    private fun handleResult(countHashMap: SortedMap<Int?, Int?>) {
+
+        Log.d("BroadHandleResult", "handleResult")
+
+        val redPointValue = countHashMap.entries.firstOrNull()
+        val bluePointValue = countHashMap.entries.elementAtOrNull(1)
+        val greenPointValue = countHashMap.entries.elementAtOrNull(2)
+        val yellowPointValue = countHashMap.entries.elementAtOrNull(3)
+        val purplePointValue = countHashMap.entries.elementAtOrNull(4)
+        val blackPointValue = countHashMap.entries.elementAtOrNull(5)
+        val orangePointValue = countHashMap.entries.elementAtOrNull(6)
+        val brownPointValue = countHashMap.entries.elementAtOrNull(7)
+
+        redPoint.text = redPointValue?.value.toString()
+        bluePoint.text = bluePointValue?.value.toString()
+        greenPoint.text = greenPointValue?.value.toString()
+        yellowPoint.text = yellowPointValue?.value.toString()
+        purplePoint.text = purplePointValue?.value.toString()
+        blackPoint.text = blackPointValue?.value.toString()
+        orangePoint.text = orangePointValue?.value.toString()
+        brownPoint.text = brownPointValue?.value.toString()
+
+
+    }
+
+    private fun customDialog(
+        userCount: Int,
+        userTeamName: String,
+        question1: String,
+        question2: String,
+        question3: String,
+        question4: String,
+        question5: String,
+        answer: String
+    ) {
+
+        val dialog = CustomDialog(this, userCount, userTeamName)
 
         try {
 
-            dialog.setData(question1, question2, question3, question4, question5)
+            dialog.setData(question1, question2, question3, question4, question5, answer)
 
         } catch (e: NullPointerException) {
 
-            Toast.makeText(this,"노래를 재생시키고 켜주세요", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "노래를 재생시키고 켜주세요", Toast.LENGTH_LONG).show()
 
         }
 

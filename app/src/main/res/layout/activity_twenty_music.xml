@@ -220,7 +220,7 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.25" />
 
-    <LinearLayout
+<!--    <LinearLayout
         android:id="@+id/linearLayoutInputColor"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -443,8 +443,18 @@
             tools:text="입력" />
 
 
-    </LinearLayout>
+    </LinearLayout>-->
 
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/nextMusicButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/playButton"
+        app:layout_constraintTop_toTopOf="@+id/guideline_two"
+        app:layout_constraintVertical_bias="0.112" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/playButton"
@@ -453,10 +463,10 @@
         android:background="@drawable/music_play"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.7"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline_two"
-        app:layout_constraintVertical_bias="0.061" />
+        app:layout_constraintVertical_bias="0.074" />
 
     <TextView
         android:id="@+id/firstExample"
@@ -465,7 +475,7 @@
         android:gravity="center"
         app:layout_constraintBottom_toTopOf="@+id/secondExample"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.725"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/playButton"
         app:layout_constraintVertical_bias="0.253"
@@ -478,7 +488,7 @@
         android:gravity="center"
         app:layout_constraintBottom_toTopOf="@+id/thirdExample"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.725"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/firstExample"
         tools:text="가나다라마바사" />
@@ -490,7 +500,7 @@
         android:gravity="center"
         app:layout_constraintBottom_toTopOf="@+id/fourthExample"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.725"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/secondExample"
         tools:text="가나다라마바사" />
@@ -502,7 +512,7 @@
         android:gravity="center"
         app:layout_constraintBottom_toTopOf="@+id/fifthExample"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.725"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/thirdExample"
         tools:text="가나다라마바사" />
@@ -512,24 +522,57 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/answerUserList"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.725"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/fourthExample"
         tools:text="가나다라마바사" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/answerUserList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="버튼을 누르면 노래가 재생됩니다."
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fifthExample"
+        app:layout_constraintVertical_bias="0.515"
+        tools:text="맞춘 사람 리스트" />
+
+    <TextView
+        android:id="@+id/lyrics"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/guideline_two"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.541"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline"
-        app:layout_constraintVertical_bias="0.461" />
+        app:layout_constraintVertical_bias="0.477" />
+
+    <Button
+        android:id="@+id/dialogButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="정답 입력"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.089"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline_two"
+        app:layout_constraintVertical_bias="0.07" />
+
+    <Button
+        android:id="@+id/answerButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="정답 확인"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.087"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline_two"
+        app:layout_constraintVertical_bias="0.194" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

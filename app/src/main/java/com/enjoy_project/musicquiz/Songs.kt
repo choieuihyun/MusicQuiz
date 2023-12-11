@@ -25,4 +25,10 @@ data class Songs (
     @SerializedName("question5")
     val question5: String,
 
+    @SerializedName("answer")
+    val answer: String,
+
+    @SerializedName("lyrics")
+    val lyrics: String
+
     )
