@@ -36,6 +36,36 @@ class RetrofitImpl {
             })
     }
 
+    // 랭킹 리스트를 위해 count 기준으로 내림차로 유저를 불러오는 코드
+    fun getListDescCount(callback: (List<User>?) -> Unit) {
+
+        RetrofitClient.userService.userList()
+            .enqueue(object : Callback<List<User>> {
+
+                override fun onResponse(
+                    call: Call<List<User>>,
+                    response: Response<List<User>>
+                ) {
+                    if (response.isSuccessful.not()) {
+                        Log.e("retrofitImpl", response.toString())
+                        callback(null)
+                    } else {
+                        val user = response.body()
+                        val sortedUserList = user?.sortedWith(compareByDescending { it.count })
+                        callback(sortedUserList)
+                        Log.d("retrofitImplSuccess", user.toString())
+                    }
+                }
+
+                override fun onFailure(call: Call<List<User>>, t: Throwable) {
+                    Log.e("retrofitImpl", "연결 실패")
+                    Log.e("retrofitImpl", t.toString())
+                }
+
+            })
+    }
+
+
     fun getUserListByTeam(team: String, callback: (List<String>?) -> Unit) {
 
         RetrofitClient.userService.userListByTeam(team)
