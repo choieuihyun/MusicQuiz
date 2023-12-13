@@ -30,6 +30,10 @@ class TwentyTwentyMusicActivity : AppCompatActivity(),
     private var storageRef = storage.reference
     private lateinit var songRef: StorageReference
 
+    private lateinit var dialog: CustomDialog
+
+    private var answerUserList = arrayListOf<String>() // 정답자 목록
+
     private val retrofit = RetrofitImpl()
 
     private var isPlaying = false; // mediaPlayer 시작, 정지를 위한 변수
@@ -81,11 +85,15 @@ class TwentyTwentyMusicActivity : AppCompatActivity(),
         val dialogButton = findViewById<Button>(R.id.dialogButton)
         val answerButton = findViewById<Button>(R.id.answerButton)
 
-        firstExample = findViewById<TextView>(R.id.firstExample)
-        secondExample = findViewById<TextView>(R.id.secondExample)
-        thirdExample = findViewById<TextView>(R.id.thirdExample)
-        fourthExample = findViewById<TextView>(R.id.fourthExample)
-        fifthExample = findViewById<TextView>(R.id.fifthExample)
+        firstExample = findViewById(R.id.firstExample)
+        secondExample = findViewById(R.id.secondExample)
+        thirdExample = findViewById(R.id.thirdExample)
+        fourthExample = findViewById(R.id.fourthExample)
+        fifthExample = findViewById(R.id.fifthExample)
+        answerUserListText = findViewById(R.id.answerUserList)
+
+        lyricsExample = findViewById(R.id.lyrics)
+        artistExample = findViewById(R.id.artist)
 
         redPoint = findViewById(R.id.red)
         bluePoint = findViewById(R.id.blue)
