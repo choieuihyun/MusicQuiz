@@ -36,12 +36,15 @@ class TwentyTwentyMusicActivity : AppCompatActivity(),
     private var playingMusicId = 1; // 1번 문제부터 시작하기 위한 Id
     private var playingLastMusicId = 50;
 
-    private lateinit var firstExample: TextView
-    private lateinit var secondExample: TextView
-    private lateinit var thirdExample: TextView
-    private lateinit var fourthExample: TextView
-    private lateinit var fifthExample: TextView
-    private lateinit var exampleAnswer: String
+    private lateinit var firstExample: TextView // 첫번째 예문
+    private lateinit var secondExample: TextView // 두번째 예문
+    private lateinit var thirdExample: TextView // 세번째 예문
+    private lateinit var fourthExample: TextView // 네번째 예문
+    private lateinit var fifthExample: TextView // 다섯번째 예문
+    private lateinit var exampleAnswer: String // 정답
+    private lateinit var lyricsExample: TextView // 가사 예문
+    private lateinit var artistExample: TextView // 가수, 노래 이름
+    private lateinit var answerUserListText: TextView // 정답자 목록
 
     private lateinit var redPoint: TextView
     private lateinit var bluePoint: TextView
