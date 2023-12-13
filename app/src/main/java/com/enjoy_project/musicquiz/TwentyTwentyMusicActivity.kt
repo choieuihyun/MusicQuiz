@@ -60,20 +60,7 @@ class TwentyTwentyMusicActivity : AppCompatActivity(),
     private lateinit var orangePoint: TextView // 오렌지색 유저(일곱번째 유저)
     private lateinit var brownPoint: TextView // 갈색 유저(여덟번째 유저)
 
-/*    private val receiver = object : BroadcastReceiver() {
-        // broadCastReceiver로 실시간 Point 데이터 갱신해보려다가 실패함.
-        override fun onReceive(context: Context?, intent: Intent?) {
-            if (intent?.action == "point-updated") {
-                Log.d("BroadcastReceiver", "onReceive: Received broadcast")
-                val countHashMap = intent.getSerializableExtra("countHashMap") as? SortedMap<Int?, Int?>
-                if (countHashMap != null) {
-                    handleResult(countHashMap)
-                }
-            }
-        }
-    }*/
-
-    private var userList = arrayListOf<String>()
+    private var userList = arrayListOf<String>() // 정답 시 카운트 추가를 위한 유저 리스트
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
