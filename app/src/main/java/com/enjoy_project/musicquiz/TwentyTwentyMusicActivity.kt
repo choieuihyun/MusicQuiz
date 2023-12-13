@@ -31,11 +31,10 @@ class TwentyTwentyMusicActivity : AppCompatActivity(),
 
     private val retrofit = RetrofitImpl()
 
-    //private val songRef = storageRef.child("$secondQuizRoot/ditto.mp3")
+    private var isPlaying = false; // mediaPlayer 시작, 정지를 위한 변수
 
-    private var isPlaying = false;
-
-    private var playingMusicId = 1;
+    private var playingMusicId = 1; // 1번 문제부터 시작하기 위한 Id
+    private var playingLastMusicId = 50;
 
     private lateinit var firstExample: TextView
     private lateinit var secondExample: TextView
@@ -320,8 +319,7 @@ class TwentyTwentyMusicActivity : AppCompatActivity(),
 
     private fun handleResult(countHashMap: SortedMap<Int?, Int?>) {
 
-        Log.d("BroadHandleResult", "handleResult")
-
+        // 각 유저에 해당하는 색에 대한 정답 카운트 처리
         val redPointValue = countHashMap.entries.firstOrNull()
         val bluePointValue = countHashMap.entries.elementAtOrNull(1)
         val greenPointValue = countHashMap.entries.elementAtOrNull(2)
