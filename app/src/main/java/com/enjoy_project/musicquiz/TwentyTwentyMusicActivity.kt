@@ -186,6 +186,9 @@ class TwentyTwentyMusicActivity : AppCompatActivity(),
 
         releaseMediaPlayer()
 
+        dialog.dismiss()
+
+
     }
 
     private fun playSongSetting(button: Button) {
@@ -390,7 +393,7 @@ class TwentyTwentyMusicActivity : AppCompatActivity(),
         answer: String
     ) {
 
-        val dialog = CustomDialog(this, userCount, userTeamName)
+        dialog = CustomDialog(this, this, userCount, userTeamName)
 
         try {
 
