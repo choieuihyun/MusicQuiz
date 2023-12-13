@@ -344,6 +344,21 @@ class TwentyTwentyMusicActivity : AppCompatActivity(),
 
     }
 
+    private fun getSongsInfo() {
+
+        CoroutineScope(Dispatchers.IO).launch {
+
+            retrofit.getSong(playingMusicId) {
+
+                Log.d("title", it?.titleKr.plus(" - ").plus(it?.artist))
+                artistExample.text = it?.titleKr.plus("-").plus(it?.artist)
+
+            }
+
+        }
+
+    }
+
     private fun handleResult(countHashMap: SortedMap<Int?, Int?>) {
 
         // 각 유저에 해당하는 색에 대한 정답 카운트 처리
