@@ -19,7 +19,8 @@ import java.lang.Exception
 import java.net.URLEncoder
 import java.util.SortedMap
 
-class TwentyTwentyMusicActivity : AppCompatActivity() {
+class TwentyTwentyMusicActivity : AppCompatActivity(),
+    CustomDialog.OnDataPassDialogToActivityListener {
 
     private var mediaPlayer: MediaPlayer? = null
 
@@ -356,4 +357,11 @@ class TwentyTwentyMusicActivity : AppCompatActivity() {
         dialog.show()
 
     }
+
+    override fun onDataPass(answerUserList: ArrayList<String>) {
+        this.answerUserList.addAll(answerUserList)
+        Log.d("answerUserList", answerUserList.toString())
+    }
+
+
 }
