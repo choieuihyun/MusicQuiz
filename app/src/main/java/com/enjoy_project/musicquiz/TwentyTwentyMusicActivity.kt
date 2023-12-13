@@ -122,6 +122,8 @@ class TwentyTwentyMusicActivity : AppCompatActivity(),
 
 
             initializeExampleColor()
+            initializeAnswerUserList()
+            initializeSongsInfo()
 
         }
 
@@ -301,6 +303,22 @@ class TwentyTwentyMusicActivity : AppCompatActivity(),
         fifthExample.setTextColor(getColor(R.color.black))
 
     }
+
+    // 정답자 리스트 초기화
+    private fun initializeAnswerUserList() {
+
+        answerUserList.clear()
+        answerUserListText.text = answerUserList.toString()
+
+    }
+
+    // 노래 정보 초기화
+    private fun initializeSongsInfo() {
+
+        artistExample.text = ""
+
+    }
+
 
     // 호출해보면 count와 유저의 순서가 안맞아. 아마 id를 같이 불러와서 순서대로 저장해야하나?
     private fun fetchDataAndProcess(teamName: String) {
