@@ -153,6 +153,18 @@ class TwentyTwentyMusicActivity : AppCompatActivity(),
                         example.setTextColor(getColor(R.color.red))
 
                 }
+                retrofit.getUserCount(userList) {
+
+                    handleResult(it)
+
+                }
+
+                getSongsInfo()
+
+                // 이렇게 하면 안되는거 아는데 걍..
+                answerUserListText.text =
+                    "정답자 : ".plus(Util.removeBrackets(answerUserList.toString()))
+
             } catch (e: Exception) {
                 Toast.makeText(this, "노래를 재생시키고 눌러주세요", Toast.LENGTH_LONG).show()
             }
