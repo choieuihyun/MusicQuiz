@@ -46,14 +46,14 @@ class TwentyTwentyMusicActivity : AppCompatActivity(),
     private lateinit var artistExample: TextView // 가수, 노래 이름
     private lateinit var answerUserListText: TextView // 정답자 목록
 
-    private lateinit var redPoint: TextView
-    private lateinit var bluePoint: TextView
-    private lateinit var greenPoint: TextView
-    private lateinit var yellowPoint: TextView
-    private lateinit var purplePoint: TextView
-    private lateinit var blackPoint: TextView
-    private lateinit var orangePoint: TextView
-    private lateinit var brownPoint: TextView
+    private lateinit var redPoint: TextView // 빨간색 유저(첫번째 유저)
+    private lateinit var bluePoint: TextView // 파란색 유저(두번째 유저)
+    private lateinit var greenPoint: TextView // 초록색 유저(세번째 유저)
+    private lateinit var yellowPoint: TextView // 노란색 유저(네번째 유저)
+    private lateinit var purplePoint: TextView // 보라색 유저(다섯번째 유저)
+    private lateinit var blackPoint: TextView // 검정색 유저(여섯번째 유저)
+    private lateinit var orangePoint: TextView // 오렌지색 유저(일곱번째 유저)
+    private lateinit var brownPoint: TextView // 갈색 유저(여덟번째 유저)
 
 /*    private val receiver = object : BroadcastReceiver() {
         // broadCastReceiver로 실시간 Point 데이터 갱신해보려다가 실패함.
