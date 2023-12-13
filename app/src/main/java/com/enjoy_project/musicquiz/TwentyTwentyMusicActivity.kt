@@ -201,23 +201,25 @@ class TwentyTwentyMusicActivity : AppCompatActivity(),
 
             try {
 
-                retrofit.getSong(playingMusicId) {
+                retrofit.getSongChild(playingMusicId) {
 
                     // 한글 파일을 못불러와서 해봤는데 쩝.. 그냥 노래 파일 이름을 영어로 바꿔버림.
                     val encodedTitle = URLEncoder.encode(it?.title + ".mp3", "UTF-8")
 
-                    playSong(button, getSongRef(it?.title ?: "null"))
-                    exampleAnswer = it?.answer ?: "null"
+
+                    playSong(button, getSongRef(it?.title ?: "데이터가 없습니다."))
+                    exampleAnswer = it?.answer ?: "데이터가 없습니다."
                     Log.d("answer", it?.answer.toString())
 
                     // 이렇게 하면 안되고 String.xml에 저장해놓고 해야함.
                     // 이것도 백그라운드 스레드에서 할게 아님.
 
-                    firstExample.text = ("1. " + it?.question1)
-                    secondExample.text = ("2. " + it?.question2)
-                    thirdExample.text = ("3. " + it?.question3)
-                    fourthExample.text = ("4. " + it?.question4)
-                    fifthExample.text = ("5. " + it?.question5)
+                    firstExample.text = ("1. ".plus(it?.question1))
+                    secondExample.text = ("2. ".plus(it?.question2))
+                    thirdExample.text = ("3. ".plus(it?.question3))
+                    fourthExample.text = ("4. ".plus(it?.question4))
+                    fifthExample.text = ("5. ".plus(it?.question5))
+                    lyricsExample.text = it?.id.toString().plus(". ").plus(it?.lyrics)
 
                 }
 
