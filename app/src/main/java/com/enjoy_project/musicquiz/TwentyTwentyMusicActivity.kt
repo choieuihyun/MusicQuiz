@@ -112,8 +112,14 @@ class TwentyTwentyMusicActivity : AppCompatActivity(),
 
         nextButton.setOnClickListener {
 
-            if (!isPlaying)
+            if (!isPlaying && playingMusicId < playingLastMusicId) {
                 playingMusicId++
+            } else if (playingMusicId == playingLastMusicId) {
+                val intent = Intent(this, UserRankingActivity::class.java)
+                startActivity(intent)
+                Toast.makeText(this,"마지막 곡입니다.", Toast.LENGTH_LONG).show()
+            }
+
 
             initializeExampleColor()
 
