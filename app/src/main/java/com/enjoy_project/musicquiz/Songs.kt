@@ -10,25 +10,10 @@ data class Songs (
     @SerializedName("title")
     val title: String,
 
-    @SerializedName("question1")
-    val question1: String,
+    @SerializedName("artist")
+    val artist: String,
 
-    @SerializedName("question2")
-    val question2: String,
+    @SerializedName("titleKr")
+    val titleKr: String
 
-    @SerializedName("question3")
-    val question3: String,
-
-    @SerializedName("question4")
-    val question4: String,
-
-    @SerializedName("question5")
-    val question5: String,
-
-    @SerializedName("answer")
-    val answer: String,
-
-    @SerializedName("lyrics")
-    val lyrics: String
-
-    )
+        )
