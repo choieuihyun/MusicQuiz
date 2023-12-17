@@ -8,6 +8,7 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.ImageView
@@ -18,16 +19,17 @@ import android.widget.Toast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.w3c.dom.Text
 
 class CustomDialog(
-    context: Context,
+    private val context: Context,
+    private val onDataPassListener: OnDataPassDialogToActivityListener,
     private val totalUserCount: Int,
     private val userTeamName: String
 ) : Dialog(context) {
 
     interface OnDataPassDialogToActivityListener {
         fun onDataPass(answerUserList: ArrayList<String>)
+
     }
 
     private val userColorArray = arrayOf(
@@ -87,6 +89,8 @@ class CustomDialog(
             }
         }
 
+        Log.d("answer", answer)
+
         btnCancel = findViewById<TextView>(R.id.btnCancel)
         btnComplete = findViewById<TextView>(R.id.btnComplete)
 
@@ -94,18 +98,20 @@ class CustomDialog(
 
         btnNext = findViewById<Button>(R.id.btnNext)
 
+        radioGroup = findViewById<RadioGroup>(R.id.radioGroup)
         question1 = findViewById<RadioButton>(R.id.radioOption1)
         question2 = findViewById<RadioButton>(R.id.radioOption2)
         question3 = findViewById<RadioButton>(R.id.radioOption3)
         question4 = findViewById<RadioButton>(R.id.radioOption4)
         question5 = findViewById<RadioButton>(R.id.radioOption5)
 
-        radioGroup = findViewById<RadioGroup>(R.id.radioGroup)
         question1.text = question1Text
         question2.text = question2Text
         question3.text = question3Text
         question4.text = question4Text
         question5.text = question5Text
+
+        userColor.setBackgroundResource(R.color.red)
 
         setRadioClickListener()
 
@@ -120,6 +126,7 @@ class CustomDialog(
 
             handleNextButtonClick()
             radioGroup.clearCheck()
+
         }
 
         btnComplete.setOnClickListener {
@@ -142,12 +149,11 @@ class CustomDialog(
 
         // 취소 가능 유무
         setCancelable(true)
-
     }
 
     // 사이즈를 조절하고 싶을 때 사용 (use it when you want to resize dialog)
     private fun resize(dialog: Dialog, width: Float, height: Float) {
-        val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val windowManager = context?.getSystemService(Context.WINDOW_SERVICE) as WindowManager
 
         if (Build.VERSION.SDK_INT < 30) {
             val size = Point()
@@ -200,10 +206,8 @@ class CustomDialog(
     private fun handleNextButtonClick() {
 
         if (selectedOption != null) {
-            val currentUserCount = userCount++
 
-            Log.d("sdfsdfop", selectedOption!!.substring(3))
-            Log.d("sdfsdfans", answer.toString())
+            val currentUserCount = userCount++
 
             if (userCount < totalUserCount) {
 
@@ -224,15 +228,10 @@ class CustomDialog(
 
                     }
 
-                    Toast.makeText(
-                        context,
-                        "Next clicked, Repeat count: $currentUserCount",
-                        Toast.LENGTH_SHORT
-                    ).show()
 
             } else {
                 btnNext.isEnabled = false
-                btnComplete.visibility = android.view.View.VISIBLE
+                btnComplete.visibility = View.VISIBLE
                 Toast.makeText(
                     context,
                     "Repeat count reached. Click Complete to finish.",
@@ -242,10 +241,14 @@ class CustomDialog(
         } else {
             Toast.makeText(context, "Please select an option.", Toast.LENGTH_SHORT).show()
         }
+
+
     }
 
     private fun handleCompleteButtonClick() {
+
         if (userCount == totalUserCount) {
+
             // 완료 버튼 클릭 시 다이얼로그 종료, 마지막 인덱스 인원 count 추가
             if (selectedOption!!.substring(3) == answer) {
 
