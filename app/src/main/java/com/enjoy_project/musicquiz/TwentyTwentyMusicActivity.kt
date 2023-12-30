@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.enjoy_project.musicquiz.user_ranking.UserRankingActivity
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.CoroutineScope
@@ -19,7 +20,8 @@ import java.lang.Exception
 import java.net.URLEncoder
 import java.util.SortedMap
 
-class TwentyTwentyMusicActivity : AppCompatActivity() {
+class TwentyTwentyMusicActivity : AppCompatActivity(),
+    CustomDialog.OnDataPassDialogToActivityListener {
 
     private var mediaPlayer: MediaPlayer? = null
 
@@ -28,44 +30,37 @@ class TwentyTwentyMusicActivity : AppCompatActivity() {
     private var storageRef = storage.reference
     private lateinit var songRef: StorageReference
 
+    private lateinit var dialog: CustomDialog
+
+    private var answerUserList = arrayListOf<String>() // 정답자 목록
+
     private val retrofit = RetrofitImpl()
 
-    //private val songRef = storageRef.child("$secondQuizRoot/ditto.mp3")
+    private var isPlaying = false; // mediaPlayer 시작, 정지를 위한 변수
 
-    private var isPlaying = false;
+    private var playingMusicId = 1; // 1번 문제부터 시작하기 위한 Id
+    private var playingLastMusicId = 50;
 
-    private var playingMusicId = 1;
+    private lateinit var firstExample: TextView // 첫번째 예문
+    private lateinit var secondExample: TextView // 두번째 예문
+    private lateinit var thirdExample: TextView // 세번째 예문
+    private lateinit var fourthExample: TextView // 네번째 예문
+    private lateinit var fifthExample: TextView // 다섯번째 예문
+    private lateinit var exampleAnswer: String // 정답
+    private lateinit var lyricsExample: TextView // 가사 예문
+    private lateinit var artistExample: TextView // 가수, 노래 이름
+    private lateinit var answerUserListText: TextView // 정답자 목록
 
-    private lateinit var firstExample: TextView
-    private lateinit var secondExample: TextView
-    private lateinit var thirdExample: TextView
-    private lateinit var fourthExample: TextView
-    private lateinit var fifthExample: TextView
-    private lateinit var exampleAnswer: String
+    private lateinit var redPoint: TextView // 빨간색 유저(첫번째 유저)
+    private lateinit var bluePoint: TextView // 파란색 유저(두번째 유저)
+    private lateinit var greenPoint: TextView // 초록색 유저(세번째 유저)
+    private lateinit var yellowPoint: TextView // 노란색 유저(네번째 유저)
+    private lateinit var purplePoint: TextView // 보라색 유저(다섯번째 유저)
+    private lateinit var blackPoint: TextView // 검정색 유저(여섯번째 유저)
+    private lateinit var orangePoint: TextView // 오렌지색 유저(일곱번째 유저)
+    private lateinit var brownPoint: TextView // 갈색 유저(여덟번째 유저)
 
-    private lateinit var redPoint: TextView
-    private lateinit var bluePoint: TextView
-    private lateinit var greenPoint: TextView
-    private lateinit var yellowPoint: TextView
-    private lateinit var purplePoint: TextView
-    private lateinit var blackPoint: TextView
-    private lateinit var orangePoint: TextView
-    private lateinit var brownPoint: TextView
-
-/*    private val receiver = object : BroadcastReceiver() {
-        // broadCastReceiver로 실시간 Point 데이터 갱신해보려다가 실패함.
-        override fun onReceive(context: Context?, intent: Intent?) {
-            if (intent?.action == "point-updated") {
-                Log.d("BroadcastReceiver", "onReceive: Received broadcast")
-                val countHashMap = intent.getSerializableExtra("countHashMap") as? SortedMap<Int?, Int?>
-                if (countHashMap != null) {
-                    handleResult(countHashMap)
-                }
-            }
-        }
-    }*/
-
-    private var userList = arrayListOf<String>()
+    private var userList = arrayListOf<String>() // 정답 시 카운트 추가를 위한 유저 리스트
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,11 +72,15 @@ class TwentyTwentyMusicActivity : AppCompatActivity() {
         val dialogButton = findViewById<Button>(R.id.dialogButton)
         val answerButton = findViewById<Button>(R.id.answerButton)
 
-        firstExample = findViewById<TextView>(R.id.firstExample)
-        secondExample = findViewById<TextView>(R.id.secondExample)
-        thirdExample = findViewById<TextView>(R.id.thirdExample)
-        fourthExample = findViewById<TextView>(R.id.fourthExample)
-        fifthExample = findViewById<TextView>(R.id.fifthExample)
+        firstExample = findViewById(R.id.firstExample)
+        secondExample = findViewById(R.id.secondExample)
+        thirdExample = findViewById(R.id.thirdExample)
+        fourthExample = findViewById(R.id.fourthExample)
+        fifthExample = findViewById(R.id.fifthExample)
+        answerUserListText = findViewById(R.id.answerUserList)
+
+        lyricsExample = findViewById(R.id.lyrics)
+        artistExample = findViewById(R.id.artist)
 
         redPoint = findViewById(R.id.red)
         bluePoint = findViewById(R.id.blue)
@@ -109,10 +108,18 @@ class TwentyTwentyMusicActivity : AppCompatActivity() {
 
         nextButton.setOnClickListener {
 
-            if (!isPlaying)
+            if (!isPlaying && playingMusicId < playingLastMusicId) {
                 playingMusicId++
+            } else if (playingMusicId == playingLastMusicId) {
+                val intent = Intent(this, UserRankingActivity::class.java)
+                startActivity(intent)
+                Toast.makeText(this,"마지막 곡입니다.", Toast.LENGTH_LONG).show()
+            }
+
 
             initializeExampleColor()
+            initializeAnswerUserList()
+            initializeSongsInfo()
 
         }
 
@@ -152,6 +159,18 @@ class TwentyTwentyMusicActivity : AppCompatActivity() {
                         example.setTextColor(getColor(R.color.red))
 
                 }
+                retrofit.getUserCount(userList) {
+
+                    handleResult(it)
+
+                }
+
+                getSongsInfo()
+
+                // 이렇게 하면 안되는거 아는데 걍..
+                answerUserListText.text =
+                    "정답자 : ".plus(Util.removeBrackets(answerUserList.toString()))
+
             } catch (e: Exception) {
                 Toast.makeText(this, "노래를 재생시키고 눌러주세요", Toast.LENGTH_LONG).show()
             }
@@ -167,6 +186,9 @@ class TwentyTwentyMusicActivity : AppCompatActivity() {
 
         releaseMediaPlayer()
 
+        dialog.dismiss()
+
+
     }
 
     private fun playSongSetting(button: Button) {
@@ -179,23 +201,25 @@ class TwentyTwentyMusicActivity : AppCompatActivity() {
 
             try {
 
-                retrofit.getSong(playingMusicId) {
+                retrofit.getSongChild(playingMusicId) {
 
                     // 한글 파일을 못불러와서 해봤는데 쩝.. 그냥 노래 파일 이름을 영어로 바꿔버림.
                     val encodedTitle = URLEncoder.encode(it?.title + ".mp3", "UTF-8")
 
-                    playSong(button, getSongRef(it?.title ?: "null"))
-                    exampleAnswer = it?.answer ?: "null"
+
+                    playSong(button, getSongRef(it?.title ?: "데이터가 없습니다."))
+                    exampleAnswer = it?.answer ?: "데이터가 없습니다."
                     Log.d("answer", it?.answer.toString())
 
                     // 이렇게 하면 안되고 String.xml에 저장해놓고 해야함.
                     // 이것도 백그라운드 스레드에서 할게 아님.
 
-                    firstExample.text = ("1. " + it?.question1)
-                    secondExample.text = ("2. " + it?.question2)
-                    thirdExample.text = ("3. " + it?.question3)
-                    fourthExample.text = ("4. " + it?.question4)
-                    fifthExample.text = ("5. " + it?.question5)
+                    firstExample.text = ("1. ".plus(it?.question1))
+                    secondExample.text = ("2. ".plus(it?.question2))
+                    thirdExample.text = ("3. ".plus(it?.question3))
+                    fourthExample.text = ("4. ".plus(it?.question4))
+                    fifthExample.text = ("5. ".plus(it?.question5))
+                    lyricsExample.text = it?.id.toString().plus(". ").plus(it?.lyrics)
 
                 }
 
@@ -281,6 +305,22 @@ class TwentyTwentyMusicActivity : AppCompatActivity() {
 
     }
 
+    // 정답자 리스트 초기화
+    private fun initializeAnswerUserList() {
+
+        answerUserList.clear()
+        answerUserListText.text = answerUserList.toString()
+
+    }
+
+    // 노래 정보 초기화
+    private fun initializeSongsInfo() {
+
+        artistExample.text = ""
+
+    }
+
+
     // 호출해보면 count와 유저의 순서가 안맞아. 아마 id를 같이 불러와서 순서대로 저장해야하나?
     private fun fetchDataAndProcess(teamName: String) {
 
@@ -305,10 +345,24 @@ class TwentyTwentyMusicActivity : AppCompatActivity() {
 
     }
 
+    private fun getSongsInfo() {
+
+        CoroutineScope(Dispatchers.IO).launch {
+
+            retrofit.getSong(playingMusicId) {
+
+                Log.d("title", it?.titleKr.plus(" - ").plus(it?.artist))
+                artistExample.text = it?.titleKr.plus("-").plus(it?.artist)
+
+            }
+
+        }
+
+    }
+
     private fun handleResult(countHashMap: SortedMap<Int?, Int?>) {
 
-        Log.d("BroadHandleResult", "handleResult")
-
+        // 각 유저에 해당하는 색에 대한 정답 카운트 처리
         val redPointValue = countHashMap.entries.firstOrNull()
         val bluePointValue = countHashMap.entries.elementAtOrNull(1)
         val greenPointValue = countHashMap.entries.elementAtOrNull(2)
@@ -341,7 +395,7 @@ class TwentyTwentyMusicActivity : AppCompatActivity() {
         answer: String
     ) {
 
-        val dialog = CustomDialog(this, userCount, userTeamName)
+        dialog = CustomDialog(this, this, userCount, userTeamName)
 
         try {
 
@@ -356,4 +410,11 @@ class TwentyTwentyMusicActivity : AppCompatActivity() {
         dialog.show()
 
     }
+
+    override fun onDataPass(answerUserList: ArrayList<String>) {
+        this.answerUserList.addAll(answerUserList)
+        Log.d("answerUserList", answerUserList.toString())
+    }
+
+
 }

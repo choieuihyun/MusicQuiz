@@ -7,8 +7,10 @@ import retrofit2.Response
 import java.util.SortedMap
 
 
+// 함수명 작명 절망적이네 ㅋㅋ
 class RetrofitImpl {
 
+    // 유저 전체 리스트 불러오기
     fun getList(callback: (List<User>?) -> Unit) {
 
         RetrofitClient.userService.userList()
@@ -68,7 +70,7 @@ class RetrofitImpl {
 
     fun getUserListByTeam(team: String, callback: (List<String>?) -> Unit) {
 
-        RetrofitClient.userService.userListByTeam(team)
+        RetrofitClient.userService.getUserListByTeam(team)
             .enqueue(object : Callback<List<String>> {
 
                 override fun onResponse(
@@ -76,12 +78,12 @@ class RetrofitImpl {
                     response: Response<List<String>>
                 ) {
                     if (response.isSuccessful.not()) {
-                        Log.e("retrofitImplByTeam", response.toString())
+                        Log.e("ImplByTeamFailed", response.toString())
                         callback(null)
                     } else {
                         val user = response.body()
                         callback(user)
-                        Log.d("retrofitImplSuccess", user.toString())
+                        Log.d("ImplByTeamSuccess", user.toString())
                     }
                 }
 
@@ -93,9 +95,9 @@ class RetrofitImpl {
             })
     }
 
-    fun getUser(id: Int, name: String, callback: (User?) -> Unit) {
+    fun getUser(name: String, callback: (User?) -> Unit) {
 
-        RetrofitClient.userService.userName(id, name)
+        RetrofitClient.userService.getUserByName(name)
             .enqueue(object : Callback<User> {
 
                 override fun onResponse(
@@ -197,7 +199,7 @@ class RetrofitImpl {
 
                 })
 
-        }catch (e: NullPointerException) {
+        } catch (e: NullPointerException) {
             Log.d("NPE", e.message!!)
         }
     }
@@ -221,7 +223,7 @@ class RetrofitImpl {
 
                 })
 
-        }catch (e: NullPointerException) {
+        } catch (e: NullPointerException) {
             Log.d("NPE", e.message!!)
         }
     }
@@ -251,21 +253,41 @@ class RetrofitImpl {
 
     }
 
-
     fun getSong(id: Int, callback: (Songs?) -> Unit) {
 
         RetrofitClient.userService.getSong(id).enqueue(object : Callback<Songs> {
 
             override fun onResponse(call: Call<Songs>, response: Response<Songs>) {
-                if (response.isSuccessful.not()) {
-                    return
-                } else {
+                if (response.isSuccessful) {
                     val songs = response.body()
                     callback(songs)
                 }
             }
 
             override fun onFailure(call: Call<Songs>, t: Throwable) {
+
+            }
+
+        })
+
+    }
+
+
+    // 노래 세부 사항들(이름 바꿔야 할 듯)
+    fun getSongChild(id: Int, callback: (SongsChild?) -> Unit) {
+
+        RetrofitClient.userService.getSongChild(id).enqueue(object : Callback<SongsChild> {
+
+            override fun onResponse(call: Call<SongsChild>, response: Response<SongsChild>) {
+                if (response.isSuccessful.not()) {
+                    return
+                } else {
+                    val songsChild = response.body()
+                    callback(songsChild)
+                }
+            }
+
+            override fun onFailure(call: Call<SongsChild>, t: Throwable) {
                 callback(null)
             }
 
@@ -275,5 +297,6 @@ class RetrofitImpl {
     }
 
 
-
 }
+
+

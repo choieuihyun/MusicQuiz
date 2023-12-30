@@ -33,6 +33,15 @@
             android:name=".TwentyTwentyMusicActivity"
             android:exported="true">
         </activity>
+
+        <activity
+            android:name=".user_ranking.UserRankingActivity"
+            android:exported="true">
+        </activity>
+
+        <service android:name=".BackgroundService"
+                 android:permission="android.permission.BIND_JOB_SERVICE" >
+        </service>
     </application>
 
 </manifest>
