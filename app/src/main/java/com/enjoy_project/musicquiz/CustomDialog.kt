@@ -58,7 +58,7 @@ class CustomDialog(
     private lateinit var btnCancel: TextView
     private lateinit var btnComplete: TextView
 
-    private lateinit var userColor: ImageView
+    private lateinit var userColor: TextView
 
     private var userList: List<String> = arrayListOf()
     private var answerUserList: ArrayList<String> = arrayListOf()
@@ -94,7 +94,7 @@ class CustomDialog(
         btnCancel = findViewById<TextView>(R.id.btnCancel)
         btnComplete = findViewById<TextView>(R.id.btnComplete)
 
-        userColor = findViewById<ImageView>(R.id.userColor)
+        userColor = findViewById<TextView>(R.id.userColor)
 
         btnNext = findViewById<Button>(R.id.btnNext)
 
