@@ -2,7 +2,7 @@
 
 AAC, 프레임워크, 라이브러리 최대한 사용하지 않고 제작해보는 것이 목표. 지금까지 많이 사용했으니까 불편하게도 해보는 것이 목표.
 
-놀러가서 사용할 앱이기 때문에 디자인은 최대한 가난하게, 재밌게 하였음.
+노래 때문에 저작권 걸리니까 어차피 배포가 안될 것 같음과 동시에 놀러가서 사용할 앱이기 때문에 디자인은 최대한 가난하게, 재밌게 하였음.
 
 <p align="center"> 
   <img alt="intro" src="https://github.com/choieuihyun/MusicQuiz/assets/59135621/bfdcc6f4-f587-4cfd-adec-9dd37b410122" align="center" width="24%">
