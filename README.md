@@ -4,11 +4,14 @@ AAC, 프레임워크, 라이브러리 최대한 사용하지 않고 제작해보
 
 노래 때문에 저작권 걸리니까 어차피 배포가 안될 것 같음과 동시에 놀러가서 사용할 앱이기 때문에 디자인은 최대한 가난하게, 재밌게 하였음.
 
+
+## 앱 화면 (왼쪽부터 실행순서)
+
 <p align="center"> 
   <img alt="intro" src="https://github.com/choieuihyun/MusicQuiz/assets/59135621/bfdcc6f4-f587-4cfd-adec-9dd37b410122" align="center" width="24%">
   <img alt="userInfo" src="https://github.com/choieuihyun/MusicQuiz/assets/59135621/f81ca346-f365-4923-a04b-a73996803fd9" align="center" width="24%"> 
   <img alt="playsong" src="https://github.com/choieuihyun/MusicQuiz/assets/59135621/9169fb9e-e880-4a21-805b-39fc5dc2a307" align="center" width="24%">
-<figcaption align="center">왼쪽부터 실행순서</figcaption></p>
+<figcaption align="center"></figcaption></p>
 
 
 
@@ -19,8 +22,15 @@ AAC, 프레임워크, 라이브러리 최대한 사용하지 않고 제작해보
   <img alt="correct" src="https://github.com/choieuihyun/MusicQuiz/assets/59135621/2acdea27-9d4b-4c05-9125-abfba1001d22" align="center" width="24%">
   <img alt="ranking" src="https://github.com/choieuihyun/MusicQuiz/assets/59135621/d34f7714-8998-4ce7-bb32-2ce6029c9a93" align="center" width="24%">
 
-<figcaption align="center">왼쪽부터 실행순서</figcaption></p>
+<figcaption align="center"></figcaption></p>
 
+
+
+## 앱 기능 요약
+
+  - 테마별 총 50문제로 구성되며 노래 재생 버튼을 누르면 나오는 가사와 5개의 문항을 보고 정답을 맞추는 퀴즈.
+
+  - 참여한 유저들끼리 정답 입력 버튼을 누른 후 빈칸에 해당하는 정답을 골라 맞춰 경쟁하는 퀴즈. 
 
 ## 앱 화면 설명
 
@@ -60,7 +70,9 @@ AAC, 프레임워크, 라이브러리 최대한 사용하지 않고 제작해보
 
          -  네번째 화면 완료 후 정답 확인, 다이얼로그에서 전달받은 정답자 목록 확인
 
-         -  정답 확인을 버튼을 누르면 다이얼로그에서 정답을 입력한 유저들이 화면 하단에 표시되어지도록 구현하였고 해당 정답 문항이 빨간색으로 변하도록 구현.
+         -  정답 확인 버튼을 누르면 다이얼로그에서 정답을 입력한 유저들이 화면 하단에 표시되어지도록 구현하였고 해당 정답 문항이 빨간색으로 변하도록 구현.
+
+         -  정답 확인 버튼을 누르면 해당 정답자의 색상 아래의 카운트가 1 증가하도록 구현.
 
       6. 여섯번째 화면(랭킹 화면)
 
